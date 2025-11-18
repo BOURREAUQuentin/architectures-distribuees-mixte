@@ -1,0 +1,117 @@
+openapi: 3.0.3
+info:
+  title: Movie GraphQL Microservice
+  version: 1.0.0
+  description: API GraphQL pour la gestion des films (lecture, ajout, modification, suppression).
+
+servers:
+  - url: http://localhost:3200
+    description: Service GraphQL Movie
+
+paths:
+  /graphql:
+    post:
+      summary: Exécuter une requête GraphQL sur les films
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              queryAll:
+                $ref: '#/components/examples/queryAll'
+              queryById:
+                $ref: '#/components/examples/queryById'
+              queryByTitle:
+                $ref: '#/components/examples/queryByTitle'
+              mutationAdd:
+                $ref: '#/components/examples/mutationAdd'
+              mutationUpdate:
+                $ref: '#/components/examples/mutationUpdate'
+              mutationRemove:
+                $ref: '#/components/examples/mutationRemove'
+      responses:
+        "200":
+          description: Réponse GraphQL réussie
+          content:
+            application/json:
+              examples:
+                queryAllResponse:
+                  summary: Réponse de tous les films
+                  value:
+                    data:
+                      movies_json:
+                        - id: "720d006c-3a57-4b6a-b18f-9b713b073f3p"
+                          title: "Inception"
+                          rating: 8.8
+                          director: "Christopher Nolan"
+                        - id: "720d006c-3a57-4b6a-b18f-9b713b073f3u"
+                          title: "Matrix"
+                          rating: 8.7
+                          director: "Wachowski"
+                queryByIdResponse:
+                  summary: Réponse d’un film par ID
+                  value:
+                    data:
+                      movie_with_id:
+                        id: "720d006c-3a57-4b6a-b18f-9b713b073f3r"
+                        title: "Inception"
+                        rating: 8.8
+                        director: "Christopher Nolan"
+
+components:
+  schemas:
+    Movie:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        rating:
+          type: number
+          format: float
+        director:
+          type: string
+
+  examples:
+    queryAll:
+      summary: Obtenir tous les films
+      value: |
+        {
+          "query": "query { movies_json(user_id: \"chris_rivers\") { id title rating director } }"
+        }
+
+    queryById:
+      summary: Obtenir un film par ID
+      value: |
+        {
+          "query": "query { movie_with_id(user_id: \"chris_rivers\", id: \"720d006c-3a57-4b6a-b18f-9b713b073f3c\") { id title director rating } }"
+        }
+
+    queryByTitle:
+      summary: Obtenir un film par titre
+      value: |
+        {
+          "query": "query { movie_with_title(user_id: \"chris_rivers\", title: \"The Martian\") { id title director rating } }"
+        }
+
+    mutationAdd:
+      summary: Ajouter un film
+      value: |
+        {
+          "query": "mutation { add_movie(user_id: \"chris_rivers\", id: \"a8034f44-aee4-44cf-b32c-74cf452aaaaz\", title: \"Matrix\", rating: 8.7, director: \"Wachowski\") { id title rating director } }"
+        }
+
+    mutationUpdate:
+      summary: Modifier la note d’un film
+      value: |
+        {
+          "query": "mutation { update_movie_rate(user_id: \"chris_rivers\", id: \"720d006c-3a57-4b6a-b18f-9b713b073f3c\", rating: 9.0) { id title rating } }"
+        }
+
+    mutationRemove:
+      summary: Supprimer un film
+      value: |
+        {
+          "query": "mutation { remove_movie_with_id(user_id: \"chris_rivers\", id: \"720d006c-3a57-4b6a-b18f-9b713b073f3c\") { id title } }"
+        }

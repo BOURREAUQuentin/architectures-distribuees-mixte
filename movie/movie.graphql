@@ -1,0 +1,18 @@
+type Query {
+    movies_json(user_id: String!): [Movie]
+    movie_with_id(user_id: String!, id: String!): Movie
+    movie_with_title(user_id: String!, title: String!): Movie
+}
+
+type Mutation {
+    add_movie(user_id: String!, id: String!, title: String!, rating: Float!, director: String!): Movie
+    update_movie_rate(user_id: String!, id: String!, rating: Float!): Movie
+    remove_movie_with_id(user_id: String!, id: String!): Movie
+}
+
+type Movie {
+    id: String!
+    title: String!
+    director: String!
+    rating: Float!
+}

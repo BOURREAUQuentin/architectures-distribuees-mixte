@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+service Schedule {
+    // Lecture
+    rpc GetJson(UserId) returns (stream ScheduleData);
+    rpc GetMoviesByDate(GetMoviesByDateRequest) returns (ScheduleData);
+    rpc GetScheduleByMovie(GetScheduleByMovieRequest) returns (DateData);
+
+    // Ajout
+    rpc AddSchedule(AddScheduleRequest) returns (ScheduleData);
+    rpc AddMovieToDate(AddScheduleRequest) returns (ScheduleData);
+
+    // Suppression
+    rpc DeleteDate(AddScheduleRequest) returns (Empty);
+    rpc DeleteMovieFromDate(AddScheduleRequest) returns (Empty);
+}
+
+// Identifiant utilisateur
+message UserId {
+    string userId = 1;
+}
+
+// Requête pour récupérer les films d'une date
+message GetMoviesByDateRequest {
+    string userId = 1;
+    string date = 2;
+}
+
+// Requête pour récupérer les dates contenant un film
+message GetScheduleByMovieRequest {
+    string userId = 1;
+    string movieId = 2;
+}
+
+// Requête d'ajout / suppression
+message AddScheduleRequest {
+    string userId = 1;
+    string date = 2;
+    repeated string moviesId = 3;
+}
+
+// Données de planning
+message ScheduleData {
+    string date = 1;
+    repeated MovieData movies = 2;
+}
+
+// Détails d’un film
+message MovieData {
+    string title = 1;
+    float rating = 2;
+    string director = 3;
+    string id = 4;
+}
+
+// Liste de dates
+message DateData {
+    repeated string dates = 1;
+}
+
+// Message vide pour réponses sans contenu
+message Empty {}

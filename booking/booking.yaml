@@ -1,0 +1,108 @@
+openapi: 3.0.3
+info:
+  title: Booking GraphQL Microservice
+  version: 1.0.0
+  description: API GraphQL pour la gestion des réservations avec dates et films.
+
+servers:
+  - url: http://localhost:3203
+    description: Service GraphQL Booking
+
+paths:
+  /graphql:
+    post:
+      summary: Exécuter une requête GraphQL sur les bookings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              queryAll:
+                $ref: '#/components/examples/queryAll'
+              queryById:
+                $ref: '#/components/examples/queryById'
+              mutationAdd:
+                $ref: '#/components/examples/mutationAdd'
+              mutationRemoveMovieDate:
+                $ref: '#/components/examples/mutationRemoveMovieDate'
+              mutationRemoveUser:
+                $ref: '#/components/examples/mutationRemoveUser'
+      responses:
+        "200":
+          description: Réponse GraphQL réussie
+          content:
+            application/json:
+              examples:
+                queryAllResponse:
+                  summary: Réponse de toutes les réservations
+                  value:
+                    data:
+                      bookings_json:
+                        - userid:
+                            id: "alice"
+                            name: "Alice"
+                            email: "alice@example.com"
+                            is_admin: false
+                            last_active: "1699999999"
+                          dates:
+                            - date: "20251020"
+                              movies:
+                                - id: "mv-001"
+                                  title: "Movie One"
+                                  director: "Director A"
+                                  rating: 8.5
+                queryByIdResponse:
+                  summary: Réponse d’une réservation par ID
+                  value:
+                    data:
+                      booking_with_id:
+                        userid:
+                          id: "alice"
+                          name: "Alice"
+                          email: "alice@example.com"
+                          is_admin: false
+                          last_active: "1699999999"
+                        dates:
+                          - date: "20251020"
+                            movies:
+                              - id: "mv-001"
+                                title: "Movie One"
+                                director: "Director A"
+                                rating: 8.5
+
+components:
+  examples:
+    queryAll:
+      summary: Obtenir toutes les réservations
+      value: |
+        {
+          "query": "query { bookings_json(user_id: \"chris_rivers\") { userid { id name email is_admin last_active } dates { date movies { id title director rating } } } }"
+        }
+
+    queryById:
+      summary: Obtenir une réservation par ID
+      value: |
+        {
+          "query": "query { booking_with_id(user_id: \"chris_rivers\", id: \"alice\") { userid { id name email is_admin last_active } dates { date movies { id title director rating } } } }"
+        }
+
+    mutationAdd:
+      summary: Ajouter une réservation (admin required)
+      value: |
+        {
+          "query": "mutation { add_booking(user_id: \"chris_rivers\", userid: \"bob\", date: \"20251021\", movieid: \"mv-002\") { userid { id name email is_admin last_active } dates { date movies { id title director rating } } } }"
+        }
+
+    mutationRemoveMovieDate:
+      summary: Supprimer un film à une date spécifique pour un utilisateur (admin required)
+      value: |
+        {
+          "query": "mutation { remove_booking_with_movie_date_user(user_id: \"chris_rivers\", userid: \"bob\", date: \"20251021\", movieid: \"mv-002\") { userid { id name email is_admin last_active } dates { date movies { id title director rating } } } }"
+        }
+
+    mutationRemoveUser:
+      summary: Supprimer toutes les réservations d’un utilisateur (admin required)
+      value: |
+        {
+          "query": "mutation { remove_bookings_with_user_id(user_id: \"chris_rivers\", userid: \"bob\") }"
+        }

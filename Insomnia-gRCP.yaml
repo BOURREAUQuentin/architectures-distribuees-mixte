@@ -1,0 +1,445 @@
+type: collection.insomnia.rest/5.0
+name: Insomnia_Collection_TP_gRCP
+meta:
+  id: wrk_9a56385c27f64c4faffae6db45e99d4e
+  created: 1759495198476
+  modified: 1759495198476
+  description: ""
+collection:
+  - name: Schedules
+    meta:
+      id: fld_cb49c5446456454790c889e59a6d2426
+      created: 1761403022838
+      modified: 1761403022838
+      sortKey: -1761403022838
+      description: ""
+    children:
+      - url: localhost:3202
+        name: Schedule - GetJson - Success
+        meta:
+          id: greq_fce382b6c0034369a57e0b2942047b82
+          created: 1761391473213
+          modified: 1761597255864
+          isPrivate: false
+          sortKey: -1761407168647
+          description: ""
+        body:
+          text: |
+            {
+              "userId": "chris_rivers"
+            }
+        protoFileId: pf_dfd11f3ca76040e6867eb8416fb9792f
+        protoMethodName: /Schedule/GetJson
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - GetMoviesByDate - Success
+        meta:
+          id: greq_5a357323659f4a5aa5aa3daaff068b8a
+          created: 1761407166243
+          modified: 1761597197983
+          isPrivate: false
+          sortKey: -1761407168547
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "chris_rivers",
+            	"date": "20151130"
+            }
+        protoFileId: pf_dfd11f3ca76040e6867eb8416fb9792f
+        protoMethodName: /Schedule/GetMoviesByDate
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - GetMoviesByDate - Failure - No movies found for this date
+        meta:
+          id: greq_2be8f9c41c18449ebdcc5bce1da2ab5d
+          created: 1761408845657
+          modified: 1761518133911
+          isPrivate: false
+          sortKey: -1761407168522
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "chris_rivers",
+            	"date": "20151139"
+            }
+        protoFileId: pf_df78cbaea6294f9cb94a03582278d770
+        protoMethodName: /Schedule/GetMoviesByDate
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - GetScheduleByMovie - Success
+        meta:
+          id: greq_08da7aba620642fd894eb44ac6f63fce
+          created: 1761513709759
+          modified: 1761518146892
+          isPrivate: false
+          sortKey: -1761407168422
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "chris_rivers",
+            	"movieId": "720d006c-3a57-4b6a-b18f-9b713b073f3c"
+            }
+        protoFileId: pf_df78cbaea6294f9cb94a03582278d770
+        protoMethodName: /Schedule/GetScheduleByMovie
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - GetScheduleByMovie - Failure - No dates found for this movie
+        meta:
+          id: greq_0c8e5d4207bd4ce0b0c6a3098efc907d
+          created: 1761514116115
+          modified: 1761518155775
+          isPrivate: false
+          sortKey: -1761407168322
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "chris_rivers",
+            	"movieId": "720d006c-3a57-4b6a-b18f-9b713b073f3z"
+            }
+        protoFileId: pf_df78cbaea6294f9cb94a03582278d770
+        protoMethodName: /Schedule/GetScheduleByMovie
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - AddSchedule - Success
+        meta:
+          id: greq_a531fb5e2c7e4dd8bd2a73c0db5d27a0
+          created: 1761515530989
+          modified: 1761598657699
+          isPrivate: false
+          sortKey: -1761407168222
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "chris_rivers",
+            	"date": "20151135",
+            	"moviesId": [
+            		"96798c08-d19b-4986-a05d-7da856efb697"
+            	]
+            }
+        protoFileId: pf_df78cbaea6294f9cb94a03582278d770
+        protoMethodName: /Schedule/AddSchedule
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - AddSchedule - Failure - Not admin
+        meta:
+          id: greq_58424419d72d48e6a55ee9be66c75834
+          created: 1761518295533
+          modified: 1761518386053
+          isPrivate: false
+          sortKey: -1761407168122
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "peter_curley",
+            	"date": "20151135",
+            	"moviesId": [
+            		"96798c08-d19b-4986-a05d-7da856efb697"
+            	]
+            }
+        protoFileId: pf_26d5dabbdb94459b8bdf258ebbf88a86
+        protoMethodName: /Schedule/AddSchedule
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - AddSchedule - Failure - Schedule date already exists
+        meta:
+          id: greq_d191f0462d7b4c3a961a8dc4a991585a
+          created: 1761518388088
+          modified: 1761597276254
+          isPrivate: false
+          sortKey: -1761407168022
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "chris_rivers",
+            	"date": "20151205",
+            	"moviesId": [
+            		"96798c08-d19b-4986-a05d-7da856efb697"
+            	]
+            }
+        protoFileId: pf_dfd11f3ca76040e6867eb8416fb9792f
+        protoMethodName: /Schedule/AddSchedule
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - AddMovieToDate - Success
+        meta:
+          id: greq_37a3d2ac645444b8b4226bc1caa6651e
+          created: 1761598658926
+          modified: 1761600335122
+          isPrivate: false
+          sortKey: -1761407167922
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "chris_rivers",
+            	"date": "20151203",
+            	"moviesId": [
+            		"96798c08-d19b-4986-a05d-7da856efb697"
+            	]
+            }
+        protoFileId: pf_f6e10154a1634acc8db052118fa73b6f
+        protoMethodName: /Schedule/AddMovieToDate
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - AddMovieToDate - Failure - Not admin
+        meta:
+          id: greq_57ab2f001b1745c68775d88381e4ab9e
+          created: 1761600330230
+          modified: 1761600724402
+          isPrivate: false
+          sortKey: -1761407167822
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "peter_curley",
+            	"date": "20151203",
+            	"moviesId": [
+            		"96798c08-d19b-4986-a05d-7da856efb697"
+            	]
+            }
+        protoFileId: pf_17b14428940649f98ca8fa2cb7246c1d
+        protoMethodName: /Schedule/AddMovieToDate
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - AddMovieToDate - Failure - Movie already scheduled for this
+          date
+        meta:
+          id: greq_44e20fbc5d0f4bf7a102f483f48cd25e
+          created: 1761600725715
+          modified: 1761601021796
+          isPrivate: false
+          sortKey: -1761407167722
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "chris_rivers",
+            	"date": "20151203",
+            	"moviesId": [
+            		"720d006c-3a57-4b6a-b18f-9b713b073f3c"
+            	]
+            }
+        protoFileId: pf_0dad5c17d42643b3bd0a605064a5bcf3
+        protoMethodName: /Schedule/AddMovieToDate
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - DeleteDate - Success
+        meta:
+          id: greq_9a47cf87e69349cca24f27edf8cced17
+          created: 1761601016224
+          modified: 1761601417033
+          isPrivate: false
+          sortKey: -1761407167622
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "chris_rivers",
+            	"date": "20151203",
+            	"moviesId": [
+            		"720d006c-3a57-4b6a-b18f-9b713b073f3c"
+            	]
+            }
+        protoFileId: pf_4640dccdaff24ed3b3aa00a7ffe1542b
+        protoMethodName: /Schedule/DeleteDate
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - DeleteDate - Failure - Not admin
+        meta:
+          id: greq_b925744ebe46493eaccd416d47633357
+          created: 1761601302737
+          modified: 1761601349466
+          isPrivate: false
+          sortKey: -1761407167522
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "peter_curley",
+            	"date": "20151203",
+            	"moviesId": [
+            		"720d006c-3a57-4b6a-b18f-9b713b073f3c"
+            	]
+            }
+        protoFileId: pf_f4357ab4b62749e88e2e1b7a15835979
+        protoMethodName: /Schedule/DeleteDate
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - DeleteDate - Failure - Date not found
+        meta:
+          id: greq_6948244e78664dd68af0198df29f60d9
+          created: 1761601350697
+          modified: 1761601403475
+          isPrivate: false
+          sortKey: -1761407167422
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "chris_rivers",
+            	"date": "20151209",
+            	"moviesId": [
+            		"720d006c-3a57-4b6a-b18f-9b713b073f3c"
+            	]
+            }
+        protoFileId: pf_3e21219211dd48239b56c3193e081a72
+        protoMethodName: /Schedule/DeleteDate
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - DeleteMovieFromDate - Success
+        meta:
+          id: greq_2b94825112b1488e81c62e7390cc9608
+          created: 1761601418419
+          modified: 1761601524052
+          isPrivate: false
+          sortKey: -1761407167322
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "chris_rivers",
+            	"date": "20151203",
+            	"moviesId": [
+            		"720d006c-3a57-4b6a-b18f-9b713b073f3c"
+            	]
+            }
+        protoFileId: pf_a39c2e2ec78042329bd3dbf6cb7103c3
+        protoMethodName: /Schedule/DeleteMovieFromDate
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - DeleteMovieFromDate - Failure - Not admin
+        meta:
+          id: greq_28ab1dec32714f5c94f82609f53da859
+          created: 1761601524918
+          modified: 1761601621811
+          isPrivate: false
+          sortKey: -1761407167222
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "peter_curley",
+            	"date": "20151203",
+            	"moviesId": [
+            		"720d006c-3a57-4b6a-b18f-9b713b073f3c"
+            	]
+            }
+        protoFileId: pf_3d725a5c67fb4e2faf7c97f9ebf7054a
+        protoMethodName: /Schedule/DeleteMovieFromDate
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+      - url: localhost:3202
+        name: Schedule - DeleteMovieFromDate - Failure - None of the movies found in
+          this date
+        meta:
+          id: greq_ba048118cc4042f9ab2094748a6a3da3
+          created: 1761601623260
+          modified: 1761601686352
+          isPrivate: false
+          sortKey: -1761407167122
+          description: ""
+        body:
+          text: |-
+            {
+            	"userId": "chris_rivers",
+            	"date": "20151203",
+            	"moviesId": [
+            		"720d006c-3a57-4b6a-b18f-9b713b073f3z"
+            	]
+            }
+        protoFileId: pf_c65af17ae09c4a1db53056aaaa2b7c5d
+        protoMethodName: /Schedule/DeleteMovieFromDate
+        reflectionApi:
+          enabled: false
+          url: https://buf.build
+          apiKey: ""
+          module: buf.build/connectrpc/eliza
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_4e3c03d67b1d4c07bcfaf3f85d229488
+    created: 1758402662078
+    modified: 1758402662078
+environments:
+  name: Base Environment
+  meta:
+    id: env_2a557cc7c66c4ab78ebfd832e5ef310f
+    created: 1758402662076
+    modified: 1759260301110
+    isPrivate: false
+  data:
+    movie_url: http://127.0.0.1:3200
+    user_url: http://127.0.0.1:3201
+    schedule_url: http://127.0.0.1:3202
+    booking_url: http://127.0.0.1:3203

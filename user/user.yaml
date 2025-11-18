@@ -1,0 +1,238 @@
+openapi: 3.0.3
+info:
+  title: User Service API
+  description: API to manage users with admin verification and integration with Booking service.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3201
+paths:
+  /users/{user_id}/is_admin:
+    get:
+      summary: Check if a user is admin
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User found and admin status returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  is_admin:
+                    type: boolean
+        '404':
+          description: User ID not found
+
+  /{user_id}/users/json:
+    get:
+      summary: Get all users
+      description: Returns all users in JSON. Admin access required.
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '403':
+          description: Unauthorized - admin access required
+        '401':
+          description: Unable to verify user
+        '503':
+          description: User service unreachable
+
+  /{user_id}/users/{user_id_wanted}:
+    get:
+      summary: Get a user by ID
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: user_id_wanted
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Unauthorized - admin access required
+        '404':
+          description: User ID not found
+
+    post:
+      summary: Add a new user
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: user_id_wanted
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User added successfully
+        '403':
+          description: Unauthorized - admin access required
+        '500':
+          description: User ID already exists
+
+    delete:
+      summary: Delete a user
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: user_id_wanted
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User deleted successfully
+        '403':
+          description: Unauthorized - admin access required
+        '500':
+          description: User ID not found
+
+  /{user_id}/users/{user_id_wanted}/{name}:
+    put:
+      summary: Update user's name
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: user_id_wanted
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User name updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Unauthorized - admin access required
+        '500':
+          description: User ID not found
+
+  /{user_id}/users/by_name:
+    get:
+      summary: Get a user by name
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User found by name
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '403':
+          description: Unauthorized - admin access required
+        '500':
+          description: User name not found
+
+  /{user_id}/users/bookings:
+    get:
+      summary: Get users who booked a specific movie on a date
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: date
+                movie:
+                  type: string
+      responses:
+        '200':
+          description: List of user names
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: string
+        '403':
+          description: Unauthorized - admin access required
+        '404':
+          description: The user does not exist
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        is_admin:
+          type: boolean
