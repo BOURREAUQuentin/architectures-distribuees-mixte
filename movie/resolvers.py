@@ -2,7 +2,7 @@ import json
 from graphql import GraphQLError
 import requests, time
 
-USER_URL  = "http://localhost:3201" # microservice User
+USER_URL  = "http://user:3201" # microservice User
 CACHE_TTL = 60 # secondes de validité du cache pour is_admin
 
 # cache local pour stocker si un user est admin

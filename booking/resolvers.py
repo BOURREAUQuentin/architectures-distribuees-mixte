@@ -2,9 +2,9 @@ import json
 from graphql import GraphQLError
 import requests, time
 
-SCHEDULE_URL = "http://localhost:3202" # service Schedule
-MOVIE_URL   = "http://localhost:3200" # service Movie
-USER_URL  = "http://localhost:3201" # microservice User
+SCHEDULE_URL = "http://schedule:3202" # service Schedule
+MOVIE_URL   = "http://movie:3200" # service Movie
+USER_URL  = "http://user:3201" # microservice User
 
 # cache local pour stocker si un user est admin
 CACHE_TTL = 60 # secondes de validité du cache pour is_admin

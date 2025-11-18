@@ -10,8 +10,8 @@ CORS(app)
 PORT = 3201
 HOST = '0.0.0.0'
 
-BOOKING_URL = "http://localhost:3203" # service Booking
-USER_URL  = "http://localhost:3201" # microservice User
+BOOKING_URL = "http://booking:3203" # service Booking
+USER_URL  = "http://user:3201" # microservice User
 
 CACHE_TTL = 60 # secondes de validité du cache pour is_admin
 

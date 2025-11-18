@@ -6,8 +6,8 @@ import json
 import requests
 import time
 
-movie_url = "http://localhost:3200"
-user_url = "http://localhost:3201"
+movie_url = "http://movie:3200"
+user_url = "http://user:3201"
 
 cache_ttl = 60
 user_admin_cache = {}
