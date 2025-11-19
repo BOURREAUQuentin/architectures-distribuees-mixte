@@ -1,11 +1,43 @@
 services:
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "${MONGO_PORT}:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+      - ./init-mongo:/docker-entrypoint-initdb.d:ro
+    networks:
+      - microservices-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   user:
     build:
       context: .
       dockerfile: user/Dockerfile
     container_name: user
     ports:
-      - "3201:3201"
+      - "${USER_PORT}:${USER_PORT}"
+    restart: unless-stopped
+    environment:
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - USER_PORT=${USER_PORT}
+      - CACHE_TTL=${CACHE_TTL}
+    depends_on:
+      - mongodb
+    networks:
+      - microservices-network
 
   movie:
     build:
@@ -13,9 +45,20 @@ services:
       dockerfile: movie/Dockerfile
     container_name: movie
     ports:
-      - "3200:3200"
+      - "${MOVIE_PORT}:${MOVIE_PORT}"
+    restart: unless-stopped
+    environment:
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MOVIE_PORT=${MOVIE_PORT}
+      - CACHE_TTL=${CACHE_TTL}
     depends_on:
+      - mongodb
       - schedule
+    networks:
+      - microservices-network
 
   booking:
     build:
@@ -23,11 +66,22 @@ services:
       dockerfile: booking/Dockerfile
     container_name: booking
     ports:
-      - "3203:3203"
+      - "${BOOKING_PORT}:${BOOKING_PORT}"
+    restart: unless-stopped
+    environment:
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - BOOKING_PORT=${BOOKING_PORT}
+      - CACHE_TTL=${CACHE_TTL}
     depends_on:
+      - mongodb
       - schedule
       - movie
       - user
+    networks:
+      - microservices-network
 
   schedule:
     build:
@@ -35,4 +89,24 @@ services:
       dockerfile: schedule/Dockerfile
     container_name: schedule
     ports:
-      - "3202:3202"
+      - "${SCHEDULE_PORT}:${SCHEDULE_PORT}"
+    restart: unless-stopped
+    environment:
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=${MONGO_PORT}
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - SCHEDULE_PORT=${SCHEDULE_PORT}
+      - CACHE_TTL=${CACHE_TTL}
+    depends_on:
+      - mongodb
+    networks:
+      - microservices-network
+
+volumes:
+  mongo-data:
+    driver: local
+
+networks:
+  microservices-network:
+    driver: bridge
