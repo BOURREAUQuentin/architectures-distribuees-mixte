@@ -1,7 +1,40 @@
+version: '3.9'
+
 services:
+  user:
+    build:
+      context: .
+      dockerfile: user/Dockerfile
+    container_name: user
+    ports:
+      - "3201:3201"
+
   movie:
-    build: ./movie/
+    build:
+      context: .
+      dockerfile: movie/Dockerfile
+    container_name: movie
     ports:
       - "3200:3200"
-  # to continue
+    depends_on:
+      - schedule
 
+  booking:
+    build:
+      context: .
+      dockerfile: booking/Dockerfile
+    container_name: booking
+    ports:
+      - "3203:3203"
+    depends_on:
+      - schedule
+      - movie
+      - user
+
+  schedule:
+    build:
+      context: .
+      dockerfile: schedule/Dockerfile
+    container_name: schedule
+    ports:
+      - "3202:3202"
