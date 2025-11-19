@@ -1,6 +1,9 @@
 import json
 from graphql import GraphQLError
-import requests, time
+import requests, time, grpc
+
+from schedule_client import get_schedule_client
+import schedule_pb2
 
 SCHEDULE_URL = "http://schedule:3202" # service Schedule
 MOVIE_URL   = "http://movie:3200" # service Movie
@@ -9,6 +12,9 @@ USER_URL  = "http://user:3201" # microservice User
 # cache local pour stocker si un user est admin
 CACHE_TTL = 60 # secondes de validité du cache pour is_admin
 user_admin_cache = {}  # format: { user_id: { "is_admin": bool, "timestamp": float } }
+
+# Client gRPC Schedule
+schedule = get_schedule_client()
 
 def verify_admin(user_id):
     """
@@ -44,12 +50,15 @@ def write(bookings_data):
 
 def resolve_booking_userid(booking, info):
     user_id = booking["userid"]
-    with open('../user/databases/users.json') as file:
-        users = json.load(file)["users"]
-    for user in users:
-        if user["id"] == user_id:
-            return user
-    raise GraphQLError("User not found: " + user_id)
+
+    try:
+        # Appel au service User pour récupérer les détails (en simulant admin pour avoir les droits)
+        r = requests.get(f"{USER_URL}/chris_rivers/users/{user_id}")
+        if r.status_code == 200:
+            return r.json()
+        raise GraphQLError(f"User not found: {user_id}")
+    except requests.exceptions.RequestException:
+        raise GraphQLError("User service unreachable")
 
 def resolve_booking_dates(booking, info):
     dates_to_return = []
@@ -112,8 +121,20 @@ def add_booking(_, info, user_id, userid, date, movieid):
     if not is_admin:
         raise GraphQLError("Unauthorized: admin access required")
 
-    # vérifie auprès de Schedule que le film est dispo à cette date
-    # TODO à faire avec requête gRCP
+    # Vérifie auprès de Schedule que le film est dispo à cette date
+    try:
+        response = schedule.GetMoviesByDate(
+            schedule_pb2.GetMoviesByDateRequest(
+                userId=user_id,
+                date=str(date)
+            )
+        )
+        movie_ids = [m.id for m in response.movies]
+        if movieid not in movie_ids:
+            raise GraphQLError("Movie not scheduled on this date")
+
+    except grpc.RpcError as e:
+        raise GraphQLError(f"Schedule service error: {e.details()}")
 
     # si l’utilisateur existe déjà
     for b in bookings:

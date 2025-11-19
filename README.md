@@ -255,6 +255,26 @@ curl -X POST http://localhost:3203/graphql \
   -d '{"query": "{ booking_with_id(user_id: \"chris_rivers\", id: \"chris_rivers\") { userid { id name email } dates { date movies { id title director rating } } } }"}'
 ```
 
+Ajouter une réservation pour le film "The Martian" pour le 01/12/2015 (cas fonctionnel) :
+
+```bash
+curl --request POST \
+  --url http://127.0.0.1:3203/graphql \
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: insomnia/11.6.1' \
+  --data '{"query":"mutation{\n  add_booking(user_id: \"chris_rivers\", userid:\"chris_rivers\", date: \"20151201\", movieid: \"a8034f44-aee4-44cf-b32c-74cf452aaaae\") {\n    userid {\n\t\t\tid\n\t\t\tname\n\t\t\tlast_active\n\t\t\tis_admin\n\t\t}\n\t\tdates {\n\t\t\tdate\n\t\t\tmovies {\n\t\t\t\ttitle\n\t\t\t}\n\t\t}\n  }\n}"}'
+```
+
+Ajouter une réservation pour le film "The Good Dinosaur" pour le 01/12/2015 (cas erreur car le film n'a pas de séance ce jour-là) :
+
+```bash
+curl --request POST \
+  --url http://127.0.0.1:3203/graphql \
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: insomnia/11.6.1' \
+  --data '{"query":"mutation{\n  add_booking(user_id: \"chris_rivers\", userid:\"chris_rivers\", date: \"20151201\", movieid: \"720d006c-3a57-4b6a-b18f-9b713b073f3c\") {\n    userid {\n\t\t\tid\n\t\t\tname\n\t\t\tlast_active\n\t\t\tis_admin\n\t\t}\n\t\tdates {\n\t\t\tdate\n\t\t\tmovies {\n\t\t\t\ttitle\n\t\t\t}\n\t\t}\n  }\n}"}'
+```
+
 #### Interface GraphiQL
 
 Accédez à l'interface GraphiQL :
