@@ -5,11 +5,8 @@ import schedule_pb2_grpc
 import json
 import requests
 import time
+import config
 
-movie_url = "http://movie:3200"
-user_url = "http://user:3201"
-
-cache_ttl = 60
 user_admin_cache = {}
 
 
@@ -18,11 +15,11 @@ def verify_admin(user_id):
 
     if user_id in user_admin_cache:
         cached = user_admin_cache[user_id]
-        if now - cached["timestamp"] < cache_ttl:
+        if now - cached["timestamp"] < config.CACHE_TTL:
             return cached["is_admin"], None
 
     try:
-        response = requests.get(f"{user_url}/users/{user_id}/is_admin")
+        response = requests.get(f"{config.USER_BASE_URL}/users/{user_id}/is_admin")
         response.raise_for_status()
         data = response.json()
         is_admin = data.get("is_admin", False)
@@ -53,7 +50,7 @@ def fetch_movie_data(user_id, movie_id, context):
     }}
     """
     try:
-        response = requests.post(f"{movie_url}/graphql", json={"query": query})
+        response = requests.post(f"{config.MOVIE_BASE_URL}/graphql", json={"query": query})
         response.raise_for_status()
         data = response.json()
         movie_details = data.get("data", {}).get("movie_with_id")

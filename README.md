@@ -27,12 +27,30 @@ Nous avons mis en place un système **admin/user** dans notre architecture micro
 
 ---
 
+## Stockage des données
+
+⚠️ **Cette branche (main) utilise des fichiers JSON pour le stockage des données.**
+
+Si vous souhaitez utiliser **MongoDB** comme base de données, consultez la branche `mongodb` du projet.
+
+Les données sont stockées dans des fichiers JSON situés dans les dossiers `databases/` de chaque microservice :
+- `user/databases/users.json`
+- `movie/databases/movies.json`
+- `booking/databases/bookings.json`
+- `schedule/databases/times.json`
+
+---
+
 ## Prérequis
 
-Avant toute chose, assurez-vous d'avoir :
+### Pour Docker (Recommandé)
+
 - **Docker** installé et en fonctionnement
 - **Docker Compose** (généralement inclus avec Docker Desktop)
-- **Python 3.10+** installé (pour les exécutions locales si nécessaire)
+
+### Pour exécution locale (sans Docker)
+
+- **Python 3.10+** installé
 - Le fichier `requirements.txt` à jour
 
 > **Important** : Le microservice `User` doit toujours être lancé, car il est utilisé par tous les autres pour la gestion admin/user.
@@ -109,14 +127,14 @@ Si vous préférez gérer les conteneurs individuellement, suivez cette méthode
 Créer un réseau commun pour que les microservices puissent communiquer :
 
 ```bash
-docker network create movie-net
+docker network create microservices-network
 ```
 
 ### 2. Lancement du microservice User
 
 ```bash
 docker build -t user-app -f user/Dockerfile .
-docker run --rm -it --name user --network movie-net -p 3201:3201 user-app
+docker run --rm -it --name user --network microservices-network -p 3201:3201 user-app
 ```
 
 **URLs de test :**
@@ -127,7 +145,7 @@ docker run --rm -it --name user --network movie-net -p 3201:3201 user-app
 
 ```bash
 docker build -t movie-app -f movie/Dockerfile .
-docker run --rm -it --name movie --network movie-net -p 3200:3200 movie-app
+docker run --rm -it --name movie --network microservices-network -p 3200:3200 movie-app
 ```
 
 **URL de base :** http://localhost:3200
@@ -136,7 +154,7 @@ docker run --rm -it --name movie --network movie-net -p 3200:3200 movie-app
 
 ```bash
 docker build -t booking-app -f booking/Dockerfile .
-docker run --rm -it --name booking --network movie-net -p 3203:3203 booking-app
+docker run --rm -it --name booking --network microservices-network -p 3203:3203 booking-app
 ```
 
 **URL de base :** http://localhost:3203
@@ -145,7 +163,7 @@ docker run --rm -it --name booking --network movie-net -p 3203:3203 booking-app
 
 ```bash
 docker build -t schedule-app -f schedule/Dockerfile .
-docker run --rm -it --name schedule --network movie-net -p 3202:3202 schedule-app
+docker run --rm -it --name schedule --network microservices-network -p 3202:3202 schedule-app
 ```
 
 **Note :** Schedule communique avec :
@@ -168,8 +186,82 @@ docker stop schedule
 Pour nettoyer le réseau :
 
 ```bash
-docker network rm movie-net
+docker network rm microservices-network
 ```
+
+---
+
+## Option 3 : Lancement local (sans Docker)
+
+Cette option permet d'exécuter les microservices directement sur votre machine, utile pour le développement et le débogage.
+
+### Prérequis locaux
+
+1. **Python 3.10+** avec pip
+
+2. **Dépendances Python** :
+
+```bash
+pip install -r requirements.txt
+```
+
+### Vérification des fichiers de données
+
+Assurez-vous que les fichiers JSON existent dans les dossiers `databases/` :
+
+```bash
+ls -la user/databases/users.json
+ls -la movie/databases/movies.json
+ls -la booking/databases/bookings.json
+ls -la schedule/databases/times.json
+```
+
+### Lancement des microservices en local
+
+Ouvrez **4 terminaux différents** (un par microservice) :
+
+**Terminal 1 - User Service :**
+
+```bash
+cd user
+python user.py
+```
+
+**Terminal 2 - Movie Service :**
+
+```bash
+cd movie
+python movie.py
+```
+
+**Terminal 3 - Schedule Service :**
+
+```bash
+cd schedule
+python schedule.py
+```
+
+**Terminal 4 - Booking Service :**
+
+```bash
+cd booking
+python booking.py
+```
+
+### URLs d'accès (exécution locale)
+
+- **User** : http://localhost:3201
+- **Movie** : http://localhost:3200
+- **Booking** : http://localhost:3203
+- **Schedule** : localhost:3202 (serveur gRPC)
+
+### Configuration pour l'exécution locale
+
+Les ports par défaut sont configurés dans chaque fichier Python :
+- User : port 3201
+- Movie : port 3200
+- Booking : port 3203
+- Schedule : port 3202
 
 ---
 
@@ -227,12 +319,6 @@ curl -X POST http://localhost:3200/graphql \
     -d '{"query": "{ movie_with_title(user_id:\"chris_rivers\", title:\"The Good Dinosaur\") { id title rating director } }"}'
 ```
 
-#### Interface GraphiQL
-
-Accédez à l'interface GraphiQL pour tester vos requêtes de manière interactive :
-
-http://localhost:3200/chris_rivers/graphql
-
 ---
 
 ### Microservice Booking (GraphQL)
@@ -275,12 +361,6 @@ curl --request POST \
   --data '{"query":"mutation{\n  add_booking(user_id: \"chris_rivers\", userid:\"chris_rivers\", date: \"20151201\", movieid: \"720d006c-3a57-4b6a-b18f-9b713b073f3c\") {\n    userid {\n\t\t\tid\n\t\t\tname\n\t\t\tlast_active\n\t\t\tis_admin\n\t\t}\n\t\tdates {\n\t\t\tdate\n\t\t\tmovies {\n\t\t\t\ttitle\n\t\t\t}\n\t\t}\n  }\n}"}'
 ```
 
-#### Interface GraphiQL
-
-Accédez à l'interface GraphiQL :
-
-http://localhost:3203/chris_rivers/graphql
-
 ---
 
 ### Microservice Schedule (gRPC)
@@ -293,7 +373,7 @@ Sur macOS :
 brew install grpcurl
 ```
 
-Sur Linux :
+Sur Linux ou Windows :
 
 ```bash
 # Téléchargez depuis https://github.com/fullstorydev/grpcurl/releases
@@ -348,7 +428,7 @@ Les fichiers de spécification OpenAPI (format YAML) se trouvent dans les dossie
 - **User** : `user/user.yaml`
 - **Movie** : `movie/movie.yaml`
 - **Booking** : `booking/booking.yaml`
-- **Schedule** : `schedule/schedule.yaml` (spécification gRPC dans `schedule/protos/schedule.proto`)
+- **Schedule** : pas de fichier car ce n'était pas possible (néanmoins, spécification gRPC dans `schedule/protos/schedule.proto`)
 
 Ces fichiers peuvent être importés dans des outils comme Swagger UI ou Postman pour une documentation interactive.
 
@@ -394,7 +474,7 @@ lsof -i :3203
 Assurez-vous que tous les conteneurs sont sur le même réseau :
 
 ```bash
-docker network inspect movie-net
+docker network inspect microservices-network
 ```
 
 ### Problèmes de cache admin
@@ -406,6 +486,23 @@ docker-compose restart user
 # ou
 docker restart user
 ```
+
+### Erreurs lors de l'exécution locale
+
+```bash
+# Vérifier les dépendances Python
+pip list | grep -E "flask|graphene|grpc"
+
+# Vérifier que les ports sont disponibles
+netstat -an | grep -E "3200|3201|3202|3203"
+
+# Vérifier que les fichiers JSON sont présents
+ls -la */databases/*.json
+```
+
+### Fichiers JSON corrompus
+
+Si les fichiers JSON sont corrompus, vous pouvez les restaurer depuis les sauvegardes ou les réinitialiser manuellement. Assurez-vous que chaque fichier respecte la structure JSON valide.
 
 ---
 

@@ -1,16 +1,11 @@
 import json
 from graphql import GraphQLError
 import requests, time, grpc
+import config
 
 from schedule_client import get_schedule_client
 import schedule_pb2
 
-SCHEDULE_URL = "http://schedule:3202" # service Schedule
-MOVIE_URL   = "http://movie:3200" # service Movie
-USER_URL  = "http://user:3201" # microservice User
-
-# cache local pour stocker si un user est admin
-CACHE_TTL = 60 # secondes de validité du cache pour is_admin
 user_admin_cache = {}  # format: { user_id: { "is_admin": bool, "timestamp": float } }
 
 # Client gRPC Schedule
@@ -24,11 +19,11 @@ def verify_admin(user_id):
     now = time.time()
     if user_id in user_admin_cache:
         cached = user_admin_cache[user_id]
-        if now - cached["timestamp"] < CACHE_TTL:
+        if now - cached["timestamp"] < config.CACHE_TTL:
             return cached["is_admin"], None
 
     try:
-        r = requests.get(f"{USER_URL}/users/{user_id}/is_admin")
+        r = requests.get(f"{config.USER_BASE_URL}/users/{user_id}/is_admin")
         if r.status_code == 200:
             data = r.json()
             is_admin = data.get("is_admin", False)
@@ -53,7 +48,7 @@ def resolve_booking_userid(booking, info):
 
     try:
         # Appel au service User pour récupérer les détails (en simulant admin pour avoir les droits)
-        r = requests.get(f"{USER_URL}/chris_rivers/users/{user_id}")
+        r = requests.get(f"{config.USER_BASE_URL}/chris_rivers/users/{user_id}")
         if r.status_code == 200:
             return r.json()
         raise GraphQLError(f"User not found: {user_id}")
@@ -82,7 +77,7 @@ def resolve_date_movies(date, info):
         }}
         """
         try:
-            response = requests.post(f"{MOVIE_URL}/graphql", json={'query': query})
+            response = requests.post(f"{config.MOVIE_BASE_URL}/graphql", json={'query': query})
             response.raise_for_status()
             data = response.json()
 

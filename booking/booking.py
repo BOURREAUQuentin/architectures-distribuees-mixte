@@ -4,13 +4,11 @@ import requests
 import json, time
 from flask_cors import CORS
 import resolvers as r
+import config
 
 app = Flask(__name__)
 
 CORS(app)
-
-PORT = 3203
-HOST = '0.0.0.0'
 
 # Création du schéma GraphQL
 type_defs = load_schema_from_path('booking.graphql')
@@ -61,5 +59,5 @@ def graphql_server():
     return jsonify(result), status_code
 
 if __name__ == "__main__":
-   print("Server running in port %s"%(PORT))
-   app.run(host=HOST, port=PORT)
+   print("Server running in port %s"%(config.BOOKING_PORT))
+   app.run(host=config.BOOKING_HOST, port=config.BOOKING_PORT)

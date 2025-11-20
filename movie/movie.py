@@ -4,13 +4,11 @@ import time, json, requests
 from werkzeug.exceptions import NotFound
 from flask_cors import CORS
 import resolvers as r
+import config
 
 app = Flask(__name__)
 
 CORS(app)
-
-PORT = 3200
-HOST = '0.0.0.0'
 
 # création du schéma GraphQL
 type_defs = load_schema_from_path('movie.graphql')
@@ -56,5 +54,5 @@ def graphql_server():
 
 if __name__ == "__main__":
     #p = sys.argv[1]
-    print("Server running in port %s"%(PORT))
-    app.run(host=HOST, port=PORT)
+    print("Server running in port %s"%(config.MOVIE_PORT))
+    app.run(host=config.MOVIE_HOST, port=config.MOVIE_PORT)
