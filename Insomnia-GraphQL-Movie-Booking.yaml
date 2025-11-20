@@ -1,9 +1,9 @@
 type: collection.insomnia.rest/5.0
-name: Insomnia_Collection_TP_GraphQL
+name: TP_MIXTE_GraphQL
 meta:
   id: wrk_9264417630da4cefbc72ed73aa8974b0
   created: 1758402662074
-  modified: 1758894715943
+  modified: 1763647863185
   description: ""
 collection:
   - name: Bookings
@@ -100,7 +100,7 @@ collection:
         meta:
           id: req_511f9bf393be4f3fa0ae0a25769d0a05
           created: 1759613958999
-          modified: 1760994474316
+          modified: 1763650241221
           isPrivate: false
           description: ""
           sortKey: -1759502358001
@@ -130,7 +130,7 @@ collection:
         meta:
           id: req_f03cb9ff697b4ea4a4a7f7cfffff61f3
           created: 1759614937115
-          modified: 1760994828225
+          modified: 1763655919319
           isPrivate: false
           description: ""
           sortKey: -1759425961743
@@ -139,7 +139,7 @@ collection:
           mimeType: application/graphql
           text: '{"query":"mutation{\n  add_booking(user_id: \"chris_rivers\",
             userid:\"chris_rivers\", date: \"20151201\", movieid:
-            \"720d006c-3a57-4b6a-b18f-9b713b073f3c\") {\n    userid
+            \"7daf7208-be4d-4944-a3ae-c1c2f516f3e6\") {\n    userid
             {\n\t\t\tid\n\t\t\tname\n\t\t\tlast_active\n\t\t\tis_admin\n\t\t}\n\t\tdates
             {\n\t\t\tdate\n\t\t\tmovies
             {\n\t\t\t\ttitle\n\t\t\t}\n\t\t}\n  }\n}"}'
@@ -161,7 +161,7 @@ collection:
         meta:
           id: req_e506f3d387114cb1a98a0a38731f0a5b
           created: 1759672218564
-          modified: 1760994905032
+          modified: 1763655997785
           isPrivate: false
           description: ""
           sortKey: -1759387763739
@@ -170,7 +170,7 @@ collection:
           mimeType: application/graphql
           text: '{"query":"mutation{\n  add_booking(user_id: \"chris_rivers\",
             userid:\"chris_rivers\", date: \"20151204\", movieid:
-            \"720d006c-3a57-4b6a-b18f-9b713b073f3c\") {\n    userid
+            \"7daf7208-be4d-4944-a3ae-c1c2f516f3e6\") {\n    userid
             {\n\t\t\tid\n\t\t\tname\n\t\t\tlast_active\n\t\t\tis_admin\n\t\t}\n\t\tdates
             {\n\t\t\tdate\n\t\t\tmovies
             {\n\t\t\t\tid\n\t\t\t\ttitle\n\t\t\t}\n\t\t}\n  }\n}"}'
@@ -192,7 +192,7 @@ collection:
         meta:
           id: req_e9b403a2a4fc48da87049a81cf6c2ce7
           created: 1759672327414
-          modified: 1760994934897
+          modified: 1763654833384
           isPrivate: false
           description: ""
           sortKey: -1759368664737
@@ -201,7 +201,7 @@ collection:
           mimeType: application/graphql
           text: '{"query":"mutation{\n  add_booking(user_id: \"chris_rivers\",
             userid:\"michael_scott\", date: \"20151204\", movieid:
-            \"720d006c-3a57-4b6a-b18f-9b713b073f3c\") {\n    userid
+            \"a8034f44-aee4-44cf-b32c-74cf452aaaae\") {\n    userid
             {\n\t\t\tid\n\t\t\tname\n\t\t\tlast_active\n\t\t\tis_admin\n\t\t}\n\t\tdates
             {\n\t\t\tdate\n\t\t\tmovies
             {\n\t\t\t\tid\n\t\t\t\ttitle\n\t\t\t}\n\t\t}\n  }\n}"}'
@@ -405,7 +405,7 @@ collection:
         meta:
           id: req_244b655c963a425fbe467001e09b916a
           created: 1759674843276
-          modified: 1760996720995
+          modified: 1763656266838
           isPrivate: false
           description: ""
           sortKey: -1759349714945.9531
@@ -413,7 +413,7 @@ collection:
         body:
           mimeType: application/graphql
           text: '{"query":"mutation{\n  remove_bookings_with_user_id(user_id:
-            \"chris_rivers\", userid:\"test_userid\")\n}"}'
+            \"chris_rivers\", userid:\"test__userid\")\n}"}'
         headers:
           - name: User-Agent
             value: insomnia/11.6.1
@@ -516,6 +516,37 @@ collection:
             send: true
             store: true
           rebuildPath: true
+      - url: "{{ _.booking_url }}/graphql"
+        name: Bookings - Add Booking - Failure - Movie not scheduled on this date
+        meta:
+          id: req_905a8c7ff6484858a084030d3927dd84
+          created: 1763658909025
+          modified: 1763658923547
+          isPrivate: false
+          description: ""
+          sortKey: -1759353146797.875
+        method: POST
+        body:
+          mimeType: application/graphql
+          text: '{"query":"mutation{\n  add_booking(user_id: \"chris_rivers\",
+            userid:\"test_userid\", date: \"20151201\", movieid:
+            \"267eedb8-0f5d-42d5-8f43-72426b9fb3e9\") {\n    userid
+            {\n\t\t\tid\n\t\t\tname\n\t\t\tlast_active\n\t\t\tis_admin\n\t\t}\n\t\tdates
+            {\n\t\t\tdate\n\t\t\tmovies
+            {\n\t\t\t\tid\n\t\t\t\ttitle\n\t\t\t}\n\t\t}\n  }\n}"}'
+        headers:
+          - name: User-Agent
+            value: insomnia/11.6.1
+          - name: Content-Type
+            value: application/json
+        settings:
+          renderRequestBody: true
+          encodeUrl: true
+          followRedirects: global
+          cookies:
+            send: true
+            store: true
+          rebuildPath: true
   - name: Movies
     meta:
       id: fld_225fc7c927c44ebd98a54372ac34b102
@@ -550,7 +581,7 @@ collection:
         meta:
           id: req_14faa360990f4a0694ee9a777c565c60
           created: 1759675494965
-          modified: 1760984751916
+          modified: 1763483694268
           isPrivate: false
           description: ""
           sortKey: -1759675452529
@@ -577,7 +608,7 @@ collection:
         meta:
           id: req_b6505c3bedc64ee69ea5145e82973c89
           created: 1759675587804
-          modified: 1760985521559
+          modified: 1763652780151
           isPrivate: false
           description: ""
           sortKey: -1759588905290
@@ -689,7 +720,7 @@ collection:
         meta:
           id: req_6c96e6509f254e55a494d9adfe484cf6
           created: 1759675833797
-          modified: 1760984316619
+          modified: 1763653045292
           isPrivate: false
           description: ""
           sortKey: -1759507767253.4375
@@ -697,8 +728,8 @@ collection:
         body:
           mimeType: application/graphql
           text: '{"query":"mutation {\n\tadd_movie (user_id: \"chris_rivers\", id:
-            \"test_movie_id\", title: \"Test movie title\", rating: 4.2,
-            director: \"Test movie director\")
+            \"test_movie_id\", title: \"Inception\", rating: 4.7, director:
+            \"Christopher Nolan\")
             {\n\t\tid\n\t\ttitle\n\t\tdirector\n\t\trating\n\t}\n}"}'
         headers:
           - name: User-Agent
@@ -718,7 +749,7 @@ collection:
         meta:
           id: req_cf667ceb1af5455bbdc92eb43c29d20e
           created: 1759676012543
-          modified: 1760984332574
+          modified: 1763653191173
           isPrivate: false
           description: ""
           sortKey: -1759505062652.2188
@@ -726,8 +757,8 @@ collection:
         body:
           mimeType: application/graphql
           text: '{"query":"mutation {\n\tadd_movie (user_id: \"chris_rivers\", id:
-            \"720d006c-3a57-4b6a-b18f-9b713b073f3c\", title: \"Test movie
-            title\", rating: 4.2, director: \"Test movie director\")
+            \"720d006c-3a57-4b6a-b18f-9b713b073f3c\", title: \"Inception\",
+            rating: 4.7, director: \"Christopher Nolan\")
             {\n\t\tid\n\t\ttitle\n\t\tdirector\n\t\trating\n\t}\n}"}'
         headers:
           - name: User-Agent
@@ -859,7 +890,7 @@ collection:
         meta:
           id: req_8d1a0dff4f3d4a268a9934057cfcd053
           created: 1760984369411
-          modified: 1760984387129
+          modified: 1763653181642
           isPrivate: false
           description: ""
           sortKey: -1759506414952.8281
@@ -867,8 +898,8 @@ collection:
         body:
           mimeType: application/graphql
           text: '{"query":"mutation {\n\tadd_movie (user_id: \"peter_curley\", id:
-            \"test_movie_id\", title: \"Test movie title\", rating: 4.2,
-            director: \"Test movie director\")
+            \"test_movie_id\", title: \"Inception\", rating: 4.7, director:
+            \"Christopher Nolan\")
             {\n\t\tid\n\t\ttitle\n\t\tdirector\n\t\trating\n\t}\n}"}'
         headers:
           - name: User-Agent
