@@ -24,18 +24,71 @@ Nous avons mis en place un système **admin/user** dans notre architecture micro
 | **Movie** | GraphQL | Gestion des films : création, lecture, mise à jour et suppression des informations de films. |
 | **Booking** | GraphQL | Gestion des réservations : création, consultation et suppression de réservations. |
 | **Schedule** | gRPC | Planification des séances : récupère les films et vérifie les droits admin via User, expose les horaires disponibles. |
+| **MongoDB** | Base de données | Stockage persistant de toutes les données (utilisateurs, films, réservations, horaires). |
+
+---
+
+## Base de données MongoDB
+
+⚠️ **Cette branche utilise obligatoirement MongoDB comme base de données.**
+
+### Configuration MongoDB
+
+Le projet utilise **MongoDB 7.0** dans un conteneur Docker avec les caractéristiques suivantes :
+
+- **Image** : `mongo:7.0`
+- **Port** : Configurable via `MONGO_PORT` (défaut : 27017)
+- **Persistance** : Volume Docker `mongo-data` monté sur `/data/db`
+- **Initialisation** : Scripts d'initialisation dans `./init-mongo`
+- **Authentification** : Username et password définis via variables d'environnement
+
+### Accès à MongoDB
+
+Pour accéder au shell MongoDB depuis le conteneur :
+
+```bash
+docker exec -it mongodb mongosh -u ${MONGO_USER} -p ${MONGO_PASSWORD}
+```
 
 ---
 
 ## Prérequis
 
-Avant toute chose, assurez-vous d'avoir :
+### Pour Docker (Recommandé)
+
 - **Docker** installé et en fonctionnement
 - **Docker Compose** (généralement inclus avec Docker Desktop)
-- **Python 3.10+** installé (pour les exécutions locales si nécessaire)
+
+### Pour exécution locale (sans Docker)
+
+- **Python 3.10+** installé
+- **MongoDB 7.0+** installé localement
 - Le fichier `requirements.txt` à jour
 
 > **Important** : Le microservice `User` doit toujours être lancé, car il est utilisé par tous les autres pour la gestion admin/user.
+
+---
+
+## Configuration
+
+Créez un fichier `.env` à la racine du projet :
+
+```env
+# MongoDB Configuration
+MONGO_HOST=mongodb       # Pour Docker (ou localhost pour exécution locale)
+MONGO_PORT=27017
+MONGO_USER=admin
+MONGO_PASSWORD=secretpassword
+
+# Services Ports
+USER_PORT=3201
+MOVIE_PORT=3200
+BOOKING_PORT=3203
+SCHEDULE_PORT=3202
+
+# Cache Configuration
+CACHE_TTL=60
+```
 
 ---
 
@@ -71,6 +124,7 @@ docker-compose logs -f
 Pour un service spécifique :
 
 ```bash
+docker-compose logs -f mongodb
 docker-compose logs -f user
 docker-compose logs -f movie
 docker-compose logs -f booking
@@ -91,12 +145,15 @@ Pour arrêter et supprimer l'ensemble des conteneurs, réseaux et volumes :
 docker-compose down -v
 ```
 
+⚠️ **Attention** : L'option `-v` supprime également les données MongoDB persistantes.
+
 ### URLs d'accès (avec Docker Compose)
 
 - **User** : http://localhost:3201
 - **Movie** : http://localhost:3200
 - **Booking** : http://localhost:3203
 - **Schedule** : localhost:3202 (serveur gRPC)
+- **MongoDB** : `mongodb://localhost:27017`
 
 ---
 
@@ -109,56 +166,100 @@ Si vous préférez gérer les conteneurs individuellement, suivez cette méthode
 Créer un réseau commun pour que les microservices puissent communiquer :
 
 ```bash
-docker network create movie-net
+docker network create microservices-network
 ```
 
-### 2. Lancement du microservice User
+### 2. Lancement de MongoDB
+
+```bash
+docker run -d \
+  --name mongodb \
+  --network microservices-network \
+  -p 27017:27017 \
+  -e MONGO_INITDB_ROOT_USERNAME=admin \
+  -e MONGO_INITDB_ROOT_PASSWORD=secretpassword \
+  -v mongo-data:/data/db \
+  mongo:7.0
+```
+
+### 3. Lancement du microservice User
 
 ```bash
 docker build -t user-app -f user/Dockerfile .
-docker run --rm -it --name user --network movie-net -p 3201:3201 user-app
+docker run --rm -it --name user \
+  --network microservices-network \
+  -p 3201:3201 \
+  -e MONGO_HOST=mongodb \
+  -e MONGO_PORT=27017 \
+  -e MONGO_USER=admin \
+  -e MONGO_PASSWORD=secretpassword \
+  -e USER_PORT=3201 \
+  -e CACHE_TTL=60 \
+  user-app
 ```
 
 **URLs de test :**
 - http://localhost:3201/peter_curley/users/json (utilisateur non-admin)
 - http://localhost:3201/chris_rivers/users/json (utilisateur admin)
 
-### 3. Lancement du microservice Movie
+### 4. Lancement du microservice Movie
 
 ```bash
 docker build -t movie-app -f movie/Dockerfile .
-docker run --rm -it --name movie --network movie-net -p 3200:3200 movie-app
+docker run --rm -it --name movie \
+  --network microservices-network \
+  -p 3200:3200 \
+  -e MONGO_HOST=mongodb \
+  -e MONGO_PORT=27017 \
+  -e MONGO_USER=admin \
+  -e MONGO_PASSWORD=secretpassword \
+  -e MOVIE_PORT=3200 \
+  -e CACHE_TTL=60 \
+  movie-app
 ```
 
 **URL de base :** http://localhost:3200
-
-### 4. Lancement du microservice Booking
-
-```bash
-docker build -t booking-app -f booking/Dockerfile .
-docker run --rm -it --name booking --network movie-net -p 3203:3203 booking-app
-```
-
-**URL de base :** http://localhost:3203
 
 ### 5. Lancement du microservice Schedule
 
 ```bash
 docker build -t schedule-app -f schedule/Dockerfile .
-docker run --rm -it --name schedule --network movie-net -p 3202:3202 schedule-app
+docker run --rm -it --name schedule \
+  --network microservices-network \
+  -p 3202:3202 \
+  -e MONGO_HOST=mongodb \
+  -e MONGO_PORT=27017 \
+  -e MONGO_USER=admin \
+  -e MONGO_PASSWORD=secretpassword \
+  -e SCHEDULE_PORT=3202 \
+  -e CACHE_TTL=60 \
+  schedule-app
 ```
 
-**Note :** Schedule communique avec :
-- User : http://user:3201
-- Movie : http://movie:3200
+### 6. Lancement du microservice Booking
 
-Le service écoute sur le port 3202 en mode gRPC.
+```bash
+docker build -t booking-app -f booking/Dockerfile .
+docker run --rm -it --name booking \
+  --network microservices-network \
+  -p 3203:3203 \
+  -e MONGO_HOST=mongodb \
+  -e MONGO_PORT=27017 \
+  -e MONGO_USER=admin \
+  -e MONGO_PASSWORD=secretpassword \
+  -e BOOKING_PORT=3203 \
+  -e CACHE_TTL=60 \
+  booking-app
+```
+
+**Note :** Booking communique avec Schedule, Movie et User via le réseau Docker.
 
 ### Arrêt des conteneurs manuels
 
 Pour arrêter un conteneur spécifique :
 
 ```bash
+docker stop mongodb
 docker stop user
 docker stop movie
 docker stop booking
@@ -168,8 +269,112 @@ docker stop schedule
 Pour nettoyer le réseau :
 
 ```bash
-docker network rm movie-net
+docker network rm microservices-network
 ```
+
+---
+
+## Option 3 : Lancement local (sans Docker)
+
+Cette option permet d'exécuter les microservices directement sur votre machine, utile pour le développement et le débogage.
+
+### Prérequis locaux
+
+1. **MongoDB installé localement** :
+    - Installation sur macOS : `brew install mongodb-community@7.0`
+    - Installation sur Linux : Suivez la [documentation officielle](https://docs.mongodb.com/manual/installation/)
+    - Installation sur Windows : Téléchargez depuis [mongodb.com](https://www.mongodb.com/try/download/community)
+
+2. **Python 3.10+** avec pip
+
+3. **Dépendances Python** :
+
+```bash
+pip install -r requirements.txt
+```
+
+### Configuration pour l'exécution locale
+
+Modifiez votre fichier `.env` pour pointer vers votre MongoDB locale :
+
+```env
+# MongoDB Configuration (local)
+MONGO_HOST=localhost
+MONGO_PORT=27017
+MONGO_USER=admin
+MONGO_PASSWORD=secretpassword
+
+# Services Ports
+USER_PORT=3201
+MOVIE_PORT=3200
+BOOKING_PORT=3203
+SCHEDULE_PORT=3202
+
+# Cache Configuration
+CACHE_TTL=60
+```
+
+### Démarrage de MongoDB en local
+
+```bash
+# Sur macOS/Linux
+mongod --dbpath /path/to/your/data/db --auth
+
+# Ou avec brew services (macOS)
+brew services start mongodb-community@7.0
+```
+
+### Création d'un utilisateur admin MongoDB
+
+```bash
+mongosh
+> use admin
+> db.createUser({
+    user: "admin",
+    pwd: "secretpassword",
+    roles: ["root"]
+  })
+```
+
+### Lancement des microservices en local
+
+Ouvrez **4 terminaux différents** (un par microservice) :
+
+**Terminal 1 - User Service :**
+
+```bash
+cd user
+python user.py
+```
+
+**Terminal 2 - Movie Service :**
+
+```bash
+cd movie
+python movie.py
+```
+
+**Terminal 3 - Schedule Service :**
+
+```bash
+cd schedule
+python schedule.py
+```
+
+**Terminal 4 - Booking Service :**
+
+```bash
+cd booking
+python booking.py
+```
+
+### URLs d'accès (exécution locale)
+
+- **User** : http://localhost:3201
+- **Movie** : http://localhost:3200
+- **Booking** : http://localhost:3203
+- **Schedule** : localhost:3202 (serveur gRPC)
+- **MongoDB** : `mongodb://localhost:27017`
 
 ---
 
@@ -227,12 +432,6 @@ curl -X POST http://localhost:3200/graphql \
     -d '{"query": "{ movie_with_title(user_id:\"chris_rivers\", title:\"The Good Dinosaur\") { id title rating director } }"}'
 ```
 
-#### Interface GraphiQL
-
-Accédez à l'interface GraphiQL pour tester vos requêtes de manière interactive :
-
-http://localhost:3200/chris_rivers/graphql
-
 ---
 
 ### Microservice Booking (GraphQL)
@@ -275,12 +474,6 @@ curl --request POST \
   --data '{"query":"mutation{\n  add_booking(user_id: \"chris_rivers\", userid:\"chris_rivers\", date: \"20151201\", movieid: \"720d006c-3a57-4b6a-b18f-9b713b073f3c\") {\n    userid {\n\t\t\tid\n\t\t\tname\n\t\t\tlast_active\n\t\t\tis_admin\n\t\t}\n\t\tdates {\n\t\t\tdate\n\t\t\tmovies {\n\t\t\t\ttitle\n\t\t\t}\n\t\t}\n  }\n}"}'
 ```
 
-#### Interface GraphiQL
-
-Accédez à l'interface GraphiQL :
-
-http://localhost:3203/chris_rivers/graphql
-
 ---
 
 ### Microservice Schedule (gRPC)
@@ -293,7 +486,7 @@ Sur macOS :
 brew install grpcurl
 ```
 
-Sur Linux :
+Sur Linux ou Windows :
 
 ```bash
 # Téléchargez depuis https://github.com/fullstorydev/grpcurl/releases
@@ -341,6 +534,47 @@ print(response)
 
 ---
 
+## Commandes utiles MongoDB
+
+### Sauvegarde de la base de données
+
+```bash
+# Avec Docker
+docker exec mongodb mongodump --username admin --password secretpassword --out /tmp/backup
+
+# En local
+mongodump --username admin --password secretpassword --out ./backup
+```
+
+### Restauration de la base de données
+
+```bash
+# Avec Docker
+docker exec mongodb mongorestore --username admin --password secretpassword /tmp/backup
+
+# En local
+mongorestore --username admin --password secretpassword ./backup
+```
+
+### Inspection des données
+
+```bash
+# Avec Docker
+docker exec -it mongodb mongosh -u admin -p secretpassword
+
+# En local
+mongosh -u admin -p secretpassword
+
+# Commandes MongoDB utiles
+> show dbs
+> use cinema
+> show collections
+> db.users.find().pretty()
+> db.movies.find().pretty()
+```
+
+---
+
 ## Documentation OpenAPI
 
 Les fichiers de spécification OpenAPI (format YAML) se trouvent dans les dossiers respectifs de chaque microservice :
@@ -348,7 +582,7 @@ Les fichiers de spécification OpenAPI (format YAML) se trouvent dans les dossie
 - **User** : `user/user.yaml`
 - **Movie** : `movie/movie.yaml`
 - **Booking** : `booking/booking.yaml`
-- **Schedule** : `schedule/schedule.yaml` (spécification gRPC dans `schedule/protos/schedule.proto`)
+- **Schedule** : pas de fichier car ce n'était pas possible (néanmoins, spécification gRPC dans `schedule/protos/schedule.proto`)
 
 Ces fichiers peuvent être importés dans des outils comme Swagger UI ou Postman pour une documentation interactive.
 
@@ -387,6 +621,34 @@ lsof -i :3200
 lsof -i :3201
 lsof -i :3202
 lsof -i :3203
+lsof -i :27017
+```
+
+### MongoDB ne démarre pas
+
+```bash
+# Vérifier les logs
+docker-compose logs mongodb
+
+# Vérifier le volume
+docker volume inspect mongodb_mongo-data
+
+# Supprimer et recréer (⚠perte de données)
+docker-compose down -v
+docker-compose up -d
+```
+
+### Service ne peut pas se connecter à MongoDB
+
+```bash
+# Vérifier que MongoDB est accessible
+docker exec -it user ping mongodb
+
+# Vérifier les variables d'environnement
+docker exec user env | grep MONGO
+
+# Tester la connexion MongoDB
+docker exec -it mongodb mongosh -u admin -p secretpassword --eval "db.adminCommand('ping')"
 ```
 
 ### Erreurs de communication entre microservices
@@ -394,7 +656,7 @@ lsof -i :3203
 Assurez-vous que tous les conteneurs sont sur le même réseau :
 
 ```bash
-docker network inspect movie-net
+docker network inspect microservices-network
 ```
 
 ### Problèmes de cache admin
@@ -405,6 +667,19 @@ Si vous rencontrez des problèmes avec le cache admin, redémarrez le microservi
 docker-compose restart user
 # ou
 docker restart user
+```
+
+### Erreurs lors de l'exécution locale
+
+```bash
+# Vérifier que MongoDB est démarré
+ps aux | grep mongod
+
+# Vérifier les dépendances Python
+pip list | grep -E "flask|graphene|grpc"
+
+# Vérifier que les ports sont disponibles
+netstat -an | grep -E "3200|3201|3202|3203|27017"
 ```
 
 ---
