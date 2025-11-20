@@ -210,7 +210,7 @@ class ScheduleServicer(schedule_pb2_grpc.ScheduleServicer):
                 write(self.db)
                 return schedule_pb2.Empty()
 
-        context.abort(grpc.StatusCode.NOT_FOUND, "Date not found")
+        context.abort(grpc.StatusCode.NOT_FOUND, "Date not found" + request.date)
 
 
 

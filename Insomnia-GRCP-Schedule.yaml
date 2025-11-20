@@ -1,9 +1,9 @@
 type: collection.insomnia.rest/5.0
-name: Insomnia_Collection_TP_gRCP
+name: TP_MIXTE_gRCP
 meta:
   id: wrk_9a56385c27f64c4faffae6db45e99d4e
   created: 1759495198476
-  modified: 1759495198476
+  modified: 1763647878086
   description: ""
 collection:
   - name: Schedules
@@ -19,7 +19,7 @@ collection:
         meta:
           id: greq_fce382b6c0034369a57e0b2942047b82
           created: 1761391473213
-          modified: 1761597255864
+          modified: 1763656851653
           isPrivate: false
           sortKey: -1761407168647
           description: ""
@@ -28,7 +28,7 @@ collection:
             {
               "userId": "chris_rivers"
             }
-        protoFileId: pf_dfd11f3ca76040e6867eb8416fb9792f
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/GetJson
         reflectionApi:
           enabled: false
@@ -40,7 +40,7 @@ collection:
         meta:
           id: greq_5a357323659f4a5aa5aa3daaff068b8a
           created: 1761407166243
-          modified: 1761597197983
+          modified: 1763656941662
           isPrivate: false
           sortKey: -1761407168547
           description: ""
@@ -50,7 +50,7 @@ collection:
             	"userId": "chris_rivers",
             	"date": "20151130"
             }
-        protoFileId: pf_dfd11f3ca76040e6867eb8416fb9792f
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/GetMoviesByDate
         reflectionApi:
           enabled: false
@@ -62,7 +62,7 @@ collection:
         meta:
           id: greq_2be8f9c41c18449ebdcc5bce1da2ab5d
           created: 1761408845657
-          modified: 1761518133911
+          modified: 1763657015715
           isPrivate: false
           sortKey: -1761407168522
           description: ""
@@ -72,7 +72,7 @@ collection:
             	"userId": "chris_rivers",
             	"date": "20151139"
             }
-        protoFileId: pf_df78cbaea6294f9cb94a03582278d770
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/GetMoviesByDate
         reflectionApi:
           enabled: false
@@ -84,7 +84,7 @@ collection:
         meta:
           id: greq_08da7aba620642fd894eb44ac6f63fce
           created: 1761513709759
-          modified: 1761518146892
+          modified: 1763657048342
           isPrivate: false
           sortKey: -1761407168422
           description: ""
@@ -94,7 +94,7 @@ collection:
             	"userId": "chris_rivers",
             	"movieId": "720d006c-3a57-4b6a-b18f-9b713b073f3c"
             }
-        protoFileId: pf_df78cbaea6294f9cb94a03582278d770
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/GetScheduleByMovie
         reflectionApi:
           enabled: false
@@ -106,7 +106,7 @@ collection:
         meta:
           id: greq_0c8e5d4207bd4ce0b0c6a3098efc907d
           created: 1761514116115
-          modified: 1761518155775
+          modified: 1763657069348
           isPrivate: false
           sortKey: -1761407168322
           description: ""
@@ -116,7 +116,7 @@ collection:
             	"userId": "chris_rivers",
             	"movieId": "720d006c-3a57-4b6a-b18f-9b713b073f3z"
             }
-        protoFileId: pf_df78cbaea6294f9cb94a03582278d770
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/GetScheduleByMovie
         reflectionApi:
           enabled: false
@@ -128,7 +128,7 @@ collection:
         meta:
           id: greq_a531fb5e2c7e4dd8bd2a73c0db5d27a0
           created: 1761515530989
-          modified: 1761598657699
+          modified: 1763657085509
           isPrivate: false
           sortKey: -1761407168222
           description: ""
@@ -141,7 +141,7 @@ collection:
             		"96798c08-d19b-4986-a05d-7da856efb697"
             	]
             }
-        protoFileId: pf_df78cbaea6294f9cb94a03582278d770
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/AddSchedule
         reflectionApi:
           enabled: false
@@ -153,7 +153,7 @@ collection:
         meta:
           id: greq_58424419d72d48e6a55ee9be66c75834
           created: 1761518295533
-          modified: 1761518386053
+          modified: 1763657100544
           isPrivate: false
           sortKey: -1761407168122
           description: ""
@@ -166,7 +166,7 @@ collection:
             		"96798c08-d19b-4986-a05d-7da856efb697"
             	]
             }
-        protoFileId: pf_26d5dabbdb94459b8bdf258ebbf88a86
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/AddSchedule
         reflectionApi:
           enabled: false
@@ -178,7 +178,7 @@ collection:
         meta:
           id: greq_d191f0462d7b4c3a961a8dc4a991585a
           created: 1761518388088
-          modified: 1761597276254
+          modified: 1763657123897
           isPrivate: false
           sortKey: -1761407168022
           description: ""
@@ -191,7 +191,7 @@ collection:
             		"96798c08-d19b-4986-a05d-7da856efb697"
             	]
             }
-        protoFileId: pf_dfd11f3ca76040e6867eb8416fb9792f
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/AddSchedule
         reflectionApi:
           enabled: false
@@ -203,7 +203,7 @@ collection:
         meta:
           id: greq_37a3d2ac645444b8b4226bc1caa6651e
           created: 1761598658926
-          modified: 1761600335122
+          modified: 1763657136789
           isPrivate: false
           sortKey: -1761407167922
           description: ""
@@ -216,7 +216,7 @@ collection:
             		"96798c08-d19b-4986-a05d-7da856efb697"
             	]
             }
-        protoFileId: pf_f6e10154a1634acc8db052118fa73b6f
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/AddMovieToDate
         reflectionApi:
           enabled: false
@@ -228,7 +228,7 @@ collection:
         meta:
           id: greq_57ab2f001b1745c68775d88381e4ab9e
           created: 1761600330230
-          modified: 1761600724402
+          modified: 1763657175791
           isPrivate: false
           sortKey: -1761407167822
           description: ""
@@ -241,7 +241,7 @@ collection:
             		"96798c08-d19b-4986-a05d-7da856efb697"
             	]
             }
-        protoFileId: pf_17b14428940649f98ca8fa2cb7246c1d
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/AddMovieToDate
         reflectionApi:
           enabled: false
@@ -254,7 +254,7 @@ collection:
         meta:
           id: greq_44e20fbc5d0f4bf7a102f483f48cd25e
           created: 1761600725715
-          modified: 1761601021796
+          modified: 1763657190183
           isPrivate: false
           sortKey: -1761407167722
           description: ""
@@ -267,7 +267,7 @@ collection:
             		"720d006c-3a57-4b6a-b18f-9b713b073f3c"
             	]
             }
-        protoFileId: pf_0dad5c17d42643b3bd0a605064a5bcf3
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/AddMovieToDate
         reflectionApi:
           enabled: false
@@ -279,7 +279,7 @@ collection:
         meta:
           id: greq_9a47cf87e69349cca24f27edf8cced17
           created: 1761601016224
-          modified: 1761601417033
+          modified: 1763657206547
           isPrivate: false
           sortKey: -1761407167622
           description: ""
@@ -292,7 +292,7 @@ collection:
             		"720d006c-3a57-4b6a-b18f-9b713b073f3c"
             	]
             }
-        protoFileId: pf_4640dccdaff24ed3b3aa00a7ffe1542b
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/DeleteDate
         reflectionApi:
           enabled: false
@@ -304,7 +304,7 @@ collection:
         meta:
           id: greq_b925744ebe46493eaccd416d47633357
           created: 1761601302737
-          modified: 1761601349466
+          modified: 1763657245533
           isPrivate: false
           sortKey: -1761407167522
           description: ""
@@ -317,7 +317,7 @@ collection:
             		"720d006c-3a57-4b6a-b18f-9b713b073f3c"
             	]
             }
-        protoFileId: pf_f4357ab4b62749e88e2e1b7a15835979
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/DeleteDate
         reflectionApi:
           enabled: false
@@ -329,7 +329,7 @@ collection:
         meta:
           id: greq_6948244e78664dd68af0198df29f60d9
           created: 1761601350697
-          modified: 1761601403475
+          modified: 1763657257447
           isPrivate: false
           sortKey: -1761407167422
           description: ""
@@ -342,7 +342,7 @@ collection:
             		"720d006c-3a57-4b6a-b18f-9b713b073f3c"
             	]
             }
-        protoFileId: pf_3e21219211dd48239b56c3193e081a72
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/DeleteDate
         reflectionApi:
           enabled: false
@@ -354,7 +354,7 @@ collection:
         meta:
           id: greq_2b94825112b1488e81c62e7390cc9608
           created: 1761601418419
-          modified: 1761601524052
+          modified: 1763657316945
           isPrivate: false
           sortKey: -1761407167322
           description: ""
@@ -367,7 +367,7 @@ collection:
             		"720d006c-3a57-4b6a-b18f-9b713b073f3c"
             	]
             }
-        protoFileId: pf_a39c2e2ec78042329bd3dbf6cb7103c3
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/DeleteMovieFromDate
         reflectionApi:
           enabled: false
@@ -379,7 +379,7 @@ collection:
         meta:
           id: greq_28ab1dec32714f5c94f82609f53da859
           created: 1761601524918
-          modified: 1761601621811
+          modified: 1763658254197
           isPrivate: false
           sortKey: -1761407167222
           description: ""
@@ -392,7 +392,7 @@ collection:
             		"720d006c-3a57-4b6a-b18f-9b713b073f3c"
             	]
             }
-        protoFileId: pf_3d725a5c67fb4e2faf7c97f9ebf7054a
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/DeleteMovieFromDate
         reflectionApi:
           enabled: false
@@ -405,7 +405,7 @@ collection:
         meta:
           id: greq_ba048118cc4042f9ab2094748a6a3da3
           created: 1761601623260
-          modified: 1761601686352
+          modified: 1763658266583
           isPrivate: false
           sortKey: -1761407167122
           description: ""
@@ -418,7 +418,7 @@ collection:
             		"720d006c-3a57-4b6a-b18f-9b713b073f3z"
             	]
             }
-        protoFileId: pf_c65af17ae09c4a1db53056aaaa2b7c5d
+        protoFileId: pf_6bc2958f2cdd46e7978c88e2c2b64357
         protoMethodName: /Schedule/DeleteMovieFromDate
         reflectionApi:
           enabled: false

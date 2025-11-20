@@ -97,12 +97,12 @@ components:
       summary: Supprimer un film à une date spécifique pour un utilisateur (admin required)
       value: |
         {
-          "query": "mutation { remove_booking_with_movie_date_user(user_id: \"chris_rivers\", userid: \"bob\", date: \"20251021\", movieid: \"mv-002\") { userid { id name email is_admin last_active } dates { date movies { id title director rating } } } }"
+          "query": "mutation { remove_booking_with_movie_date_user(user_id: \"chris_rivers\", userid: \"garret_heaton\", date: \"20151201\", movieid: \"267eedb8-0f5d-42d5-8f43-72426b9fb3e6\") { userid { id name email is_admin last_active } dates { date movies { id title director rating } } } }"
         }
 
     mutationRemoveUser:
       summary: Supprimer toutes les réservations d’un utilisateur (admin required)
       value: |
         {
-          "query": "mutation { remove_bookings_with_user_id(user_id: \"chris_rivers\", userid: \"bob\") }"
+          "query": "mutation { remove_bookings_with_user_id(user_id: \"chris_rivers\", userid: \"dwight_schrute\") }"
         }
