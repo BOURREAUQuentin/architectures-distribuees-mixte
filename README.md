@@ -199,10 +199,28 @@ Cette option permet d'exécuter les microservices directement sur votre machine,
 
 1. **Python 3.10+** avec pip
 
-2. **Dépendances Python** :
+### Environnement virtuel Python (pour exécution locale)
+
+Si vous souhaitez exécuter les services en local (hors Docker), créez d'abord un environnement virtuel Python :
 
 ```bash
+# Créer l'environnement virtuel
+python3 -m venv venv
+
+# Activer l'environnement virtuel
+# Sur macOS/Linux :
+source venv/bin/activate
+
+# Sur Windows :
+venv\Scripts\activate
+
+# Installer les dépendances pour tous les services
 pip install -r requirements.txt
+```
+
+**Note :** L'environnement virtuel doit rester activé pendant l'utilisation locale des services. Pour le désactiver :
+```bash
+deactivate
 ```
 
 ### Vérification des fichiers de données
@@ -453,6 +471,18 @@ Les requêtes sont organisées par microservice :
 - **Movie** : Requêtes GraphQL pour la gestion des films
 - **Booking** : Requêtes GraphQL pour la gestion des réservations
 - **Schedule** : Requêtes gRPC pour la planification
+
+### Configuration spécifique pour gRPC (Schedule)
+
+Pour les requêtes gRPC du microservice Schedule, vous devez configurer manuellement le fichier proto :
+
+**Pour chaque requête gRPC** dans Insomnia :
+- Sélectionnez la requête Schedule dans la liste
+- Dans l'onglet **Proto File**, cliquez sur **Add Proto File**
+- Sélectionnez le fichier `schedule/protos/schedule.proto` depuis votre projet
+- Dans le champ **Method**, sélectionnez la méthode correspondant au nom de la requête :
+    - Pour la requête "GetMoviesByDate" → Méthode : `Schedule/GetMoviesByDate`
+    - Pour toute autre requête du service Schedule → Méthode : `Schedule/NomDeLaMethode`
 
 ---
 
