@@ -218,18 +218,47 @@ def get_users_from_booking(user_id):
     movie_id = req.get("movie")
     user_list = []
 
-    r = requests.get(f"{config.BOOKING_BASE_URL}/{user_id}/bookings") # appele microservice de Booking
-    data = r.json()
+    query = """
+    query($user_id: String!) {
+      bookings_json(user_id: $user_id) {
+        userid {
+          id
+          name
+          last_active
+          is_admin
+        }
+        dates {
+          date
+          movies {
+            id
+            title
+          }
+        }
+      }
+    }
+    """
+    variables = {"user_id": user_id}
+
+    r = requests.post(
+        f"{config.BOOKING_BASE_URL}/graphql",
+        json={"query": query, "variables": variables}
+    )
+
+    data = r.json().get("data", {}).get("bookings_json", [])
 
     for b in data:
         for d in b["dates"]:
             if d["date"] == date:
                 for m in d["movies"]:
-                    if m == movie_id:
-                        user = users_collection.find_one({"id": b["userid"]})
-                        if user is None:
+                    if not m:
+                        continue
+                    if m.get("id") == movie_id:
+                        name = b["userid"]["name"]
+                        if not name:
                             return make_response(jsonify({"error": "The user does not exist"}), 404)
-                        user_list.append(user["name"])
+                        user_list.append(name)
+    if not user_list:
+        return make_response(jsonify({"error": "No bookings found for the given date and movie"}), 404)
 
     return make_response(jsonify({
         "users": user_list
