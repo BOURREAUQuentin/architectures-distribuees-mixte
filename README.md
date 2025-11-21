@@ -69,29 +69,6 @@ docker exec -it mongodb mongosh -u ${MONGO_USER} -p ${MONGO_PASSWORD}
 
 ---
 
-## Configuration
-
-Créez un fichier `.env` à la racine du projet :
-
-```env
-# MongoDB Configuration
-MONGO_HOST=mongodb       # Pour Docker (ou localhost pour exécution locale)
-MONGO_PORT=27017
-MONGO_USER=admin
-MONGO_PASSWORD=secretpassword
-
-# Services Ports
-USER_PORT=3201
-MOVIE_PORT=3200
-BOOKING_PORT=3203
-SCHEDULE_PORT=3202
-
-# Cache Configuration
-CACHE_TTL=60
-```
-
----
-
 ## Option 1 : Lancement avec Docker Compose (Recommandé)
 
 ### Démarrage rapide
@@ -287,10 +264,28 @@ Cette option permet d'exécuter les microservices directement sur votre machine,
 
 2. **Python 3.10+** avec pip
 
-3. **Dépendances Python** :
+### Environnement virtuel Python (pour exécution locale)
+
+Si vous souhaitez exécuter les services en local (hors Docker), créez d'abord un environnement virtuel Python :
 
 ```bash
+# Créer l'environnement virtuel
+python3 -m venv venv
+
+# Activer l'environnement virtuel
+# Sur macOS/Linux :
+source venv/bin/activate
+
+# Sur Windows :
+venv\Scripts\activate
+
+# Installer les dépendances pour tous les services
 pip install -r requirements.txt
+```
+
+**Note :** L'environnement virtuel doit rester activé pendant l'utilisation locale des services. Pour le désactiver :
+```bash
+deactivate
 ```
 
 ### Configuration pour l'exécution locale
@@ -299,12 +294,13 @@ Modifiez votre fichier `.env` pour pointer vers votre MongoDB locale :
 
 ```env
 # MongoDB Configuration (local)
-MONGO_HOST=localhost
+MONGO_HOST=localhost (local)
 MONGO_PORT=27017
 MONGO_USER=admin
 MONGO_PASSWORD=secretpassword
 
 # Services Ports
+USE_DOCKER=false (local)
 USER_PORT=3201
 MOVIE_PORT=3200
 BOOKING_PORT=3203
@@ -607,6 +603,18 @@ Les requêtes sont organisées par microservice :
 - **Movie** : Requêtes GraphQL pour la gestion des films
 - **Booking** : Requêtes GraphQL pour la gestion des réservations
 - **Schedule** : Requêtes gRPC pour la planification
+
+### Configuration spécifique pour gRPC (Schedule)
+
+Pour les requêtes gRPC du microservice Schedule, vous devez configurer manuellement le fichier proto :
+
+**Pour chaque requête gRPC** dans Insomnia :
+- Sélectionnez la requête Schedule dans la liste
+- Dans l'onglet **Proto File**, cliquez sur **Add Proto File**
+- Sélectionnez le fichier `schedule/protos/schedule.proto` depuis votre projet
+- Dans le champ **Method**, sélectionnez la méthode correspondant au nom de la requête :
+    - Pour la requête "GetMoviesByDate" → Méthode : `Schedule/GetMoviesByDate`
+    - Pour toute autre requête du service Schedule → Méthode : `Schedule/NomDeLaMethode`
 
 ---
 
