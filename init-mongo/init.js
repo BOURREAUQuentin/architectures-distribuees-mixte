@@ -47,7 +47,7 @@ db.users.insertMany([
         "id": "dwight_schrute",
         "name": "Dwight Schrute",
         "last_active": 1360031202,
-        "is_admin": false
+        "is_admin": true
     }
 ]);
 
@@ -58,46 +58,52 @@ db = db.getSiblingDB('movies_db');
 
 db.movies.insertMany([
     {
-        "id": "a8034f44-aee4-44cf-b32c-74cf452aaaae",
+        "title": "The Good Dinosaur",
+        "rating": 7.4,
+        "director": "Peter Sohn",
+        "id": "720d006c-3a57-4b6a-b18f-9b713b073f3c"
+    },
+    {
         "title": "The Martian",
-        "rating": 7.0,
-        "director": "Ridley Scott"
+        "rating": 8.2,
+        "director": "Ridley Scott",
+        "id": "a8034f44-aee4-44cf-b32c-74cf452aaaae"
     },
     {
-        "id": "39ab85e5-5e8e-4dc5-afea-65dc368bd7ab",
+        "title": "The Night Before",
+        "rating": 7.4,
+        "director": "Jonathan Levine",
+        "id": "96798c08-d19b-4986-a05d-7da856efb697"
+    },
+    {
         "title": "Creed",
-        "rating": 7.5,
-        "director": "Ryan Coogler"
+        "rating": 8.8,
+        "director": "Ryan Coogler",
+        "id": "267eedb8-0f5d-42d5-8f43-72426b9fb3e6"
     },
     {
-        "id": "276c79ec-a26a-40a6-b3d3-fb242a5947b6",
-        "title": "The Hunger Games: Mockingjay - Part 2",
-        "rating": 6.5,
-        "director": "Francis Lawrence"
+        "title": "Victor Frankenstein",
+        "rating": 6.4,
+        "director": "Paul McGuigan",
+        "id": "7daf7208-be4d-4944-a3ae-c1c2f516f3e6"
     },
     {
-        "id": "720d006c-3a57-4b6a-b18f-9b713b073f3c",
-        "title": "Spectre",
-        "rating": 6.8,
-        "director": "Sam Mendes"
-    },
-    {
-        "id": "96798c08-d19b-4986-a05d-7da856efb697",
         "title": "The Danish Girl",
+        "rating": 5.3,
+        "director": "Tom Hooper",
+        "id": "276c79ec-a26a-40a6-b3d3-fb242a5947b6"
+    },
+    {
+        "title": "Spectre",
         "rating": 7.1,
-        "director": "Tom Hooper"
+        "director": "Sam Mendes",
+        "id": "39ab85e5-5e8e-4dc5-afea-65dc368bd7ab"
     },
     {
-        "id": "267eedb8-0f5d-42d5-8f43-72426b9fb3e6",
-        "title": "Star Wars: The Force Awakens",
-        "rating": 7.9,
-        "director": "J.J. Abrams"
-    },
-    {
-        "id": "7daf7208-be4d-4944-a3ae-c1c2f516f3e6",
-        "title": "The Revenant",
-        "rating": 8.0,
-        "director": "Alejandro González Iñárritu"
+        "title": "Test",
+        "rating": 1.2,
+        "director": "Someone",
+        "id": "xxx"
     }
 ]);
 
@@ -121,11 +127,11 @@ db.bookings.insertMany([
         "dates": [
             {
                 "date": "20151201",
-                "movies": ["276c79ec-a26a-40a6-b3d3-fb242a5947b6"]
+                "movies": ["267eedb8-0f5d-42d5-8f43-72426b9fb3e6"]
             },
             {
-                "date": "20151215",
-                "movies": ["267eedb8-0f5d-42d5-8f43-72426b9fb3e6"]
+                "date": "20151202",
+                "movies": ["276c79ec-a26a-40a6-b3d3-fb242a5947b6"]
             }
         ]
     },
@@ -134,11 +140,11 @@ db.bookings.insertMany([
         "dates": [
             {
                 "date": "20151201",
-                "movies": ["267eedb8-0f5d-42d5-8f43-72426b9fb3e6", "7daf7208-be4d-4944-a3ae-c1c2f516f3e6"]
+                "movies": ["7daf7208-be4d-4944-a3ae-c1c2f516f3e6", "267eedb8-0f5d-42d5-8f43-72426b9fb3e6"]
             },
             {
-                "date": "20151214",
-                "movies": ["a8034f44-aee4-44cf-b32c-74cf452aaaae"]
+                "date": "20151205",
+                "movies": ["a8034f44-aee4-44cf-b32c-74cf452aaaae", "276c79ec-a26a-40a6-b3d3-fb242a5947b6"]
             }
         ]
     }
@@ -152,26 +158,26 @@ db = db.getSiblingDB('schedules_db');
 db.schedules.insertMany([
     {
         "date": "20151130",
-        "movies": ["720d006c-3a57-4b6a-b18f-9b713b073f3c", "a8034f44-aee4-44cf-b32c-74cf452aaaae"]
+        "movies": ["720d006c-3a57-4b6a-b18f-9b713b073f3c", "a8034f44-aee4-44cf-b32c-74cf452aaaae", "39ab85e5-5e8e-4dc5-afea-65dc368bd7ab"]
     },
     {
         "date": "20151201",
-        "movies": ["267eedb8-0f5d-42d5-8f43-72426b9fb3e6", "276c79ec-a26a-40a6-b3d3-fb242a5947b6", "39ab85e5-5e8e-4dc5-afea-65dc368bd7ab", "a8034f44-aee4-44cf-b32c-74cf452aaaae"]
+        "movies": ["267eedb8-0f5d-42d5-8f43-72426b9fb3e6", "7daf7208-be4d-4944-a3ae-c1c2f516f3e6", "39ab85e5-5e8e-4dc5-afea-65dc368bd7ab", "a8034f44-aee4-44cf-b32c-74cf452aaaae"]
     },
     {
         "date": "20151202",
-        "movies": ["276c79ec-a26a-40a6-b3d3-fb242a5947b6", "720d006c-3a57-4b6a-b18f-9b713b073f3c", "a8034f44-aee4-44cf-b32c-74cf452aaaae"]
+        "movies": ["a8034f44-aee4-44cf-b32c-74cf452aaaae", "96798c08-d19b-4986-a05d-7da856efb697", "39ab85e5-5e8e-4dc5-afea-65dc368bd7ab", "276c79ec-a26a-40a6-b3d3-fb242a5947b6"]
     },
     {
         "date": "20151203",
-        "movies": ["276c79ec-a26a-40a6-b3d3-fb242a5947b6", "39ab85e5-5e8e-4dc5-afea-65dc368bd7ab", "a8034f44-aee4-44cf-b32c-74cf452aaaae"]
+        "movies": ["720d006c-3a57-4b6a-b18f-9b713b073f3c", "39ab85e5-5e8e-4dc5-afea-65dc368bd7ab"]
     },
     {
-        "date": "20151214",
-        "movies": ["267eedb8-0f5d-42d5-8f43-72426b9fb3e6", "276c79ec-a26a-40a6-b3d3-fb242a5947b6", "39ab85e5-5e8e-4dc5-afea-65dc368bd7ab", "a8034f44-aee4-44cf-b32c-74cf452aaaae", "96798c08-d19b-4986-a05d-7da856efb697"]
+        "date": "20151204",
+        "movies": ["96798c08-d19b-4986-a05d-7da856efb697", "a8034f44-aee4-44cf-b32c-74cf452aaaae", "7daf7208-be4d-4944-a3ae-c1c2f516f3e6"]
     },
     {
-        "date": "20151215",
-        "movies": ["267eedb8-0f5d-42d5-8f43-72426b9fb3e6", "7daf7208-be4d-4944-a3ae-c1c2f516f3e6"]
+        "date": "20151205",
+        "movies": ["96798c08-d19b-4986-a05d-7da856efb697", "a8034f44-aee4-44cf-b32c-74cf452aaaae", "7daf7208-be4d-4944-a3ae-c1c2f516f3e6", "276c79ec-a26a-40a6-b3d3-fb242a5947b6", "39ab85e5-5e8e-4dc5-afea-65dc368bd7ab"]
     }
 ]);
